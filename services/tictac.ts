@@ -1,6 +1,4 @@
 const postGame = async (data = {}) => {
-  console.log("proces", `${process.env.apiGame}`);
-  console.log(data);
   const response = await fetch(`${process.env.apiGame}`, {
     method: "POST",
     body: JSON.stringify(data),
@@ -8,9 +6,17 @@ const postGame = async (data = {}) => {
       "Content-Type": "application/json",
     },
   });
-  // console.log(response);
-  // const result = await response.json();
-  // console.log("result", result);
+  return response;
+};
+
+const getGame = async (id = 1) => {
+  const response = await fetch(`${process.env.apiGame}`, {
+    method: "GET",
+    body: JSON.stringify(id),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   return response;
 };
 
