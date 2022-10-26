@@ -1,14 +1,6 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Data = {
-  name: string;
-};
-
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { id, name },
     method,
@@ -20,10 +12,13 @@ export default function handler(
       res.status(200).json({ name: "John Doe" });
       break;
     case "POST":
-      res.status(200).json(body);
+      // const bodyParse = JSON.parse(body);
+      console.log(body?.partidaId);
+      const startGame = Math.round(Math.random());
+      res.status(200).json(startGame);
       break;
     default:
-      // res.setHeader("Allow", ["GET", "POST"]);
+      res.setHeader("Allow", ["GET", "POST"]);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 }

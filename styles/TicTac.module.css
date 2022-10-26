@@ -1,0 +1,23 @@
+.tictac {
+  min-height: 100vh;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tictacContainer {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  cursor: pointer;
+}
+
+.tictacElement {
+  background: white;
+  color: #000;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+}
