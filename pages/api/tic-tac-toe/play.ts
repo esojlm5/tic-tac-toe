@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
 
-import { ticTacValidator } from "@/utils/winnerValidator";
+import { ticTacValidator, createGameElements } from "@/utils/winnerValidator";
 import connectMongo from "@/lib/dbConnect";
 import PlayModel from "@/models/play.model";
 
@@ -47,21 +47,30 @@ export default async function handler(
             estadoTablero[free[random]] = "O";
           }
           validate = ticTacValidator(estadoTablero);
+          console.log(siguienteMovimiento?.deshacer);
           const find = await PlayModel.findOneAndUpdate(
             { partidaId: body.partidaId },
             {
-              estadoTablero,
-              $push: { historial: siguienteMovimiento },
+              estadoTablero: siguienteMovimiento?.deshacer
+                ? createGameElements(9)
+                : estadoTablero,
+              $push: {
+                historial: siguienteMovimiento?.deshacer
+                  ? {}
+                  : siguienteMovimiento,
+              },
             },
             { returnOriginal: false }
           );
-          res
-            .status(200)
-            .json({ ...find._doc, siguienteMovimiento: null, validate });
+          res.status(200).json({
+            ...find._doc,
+            siguienteMovimiento: null,
+            validate: siguienteMovimiento?.deshacer || validate,
+          });
           res.end();
         } else {
           const startGame = Math.round(Math.random());
-          let createTablero = [...Array(9)].map(() => "-");
+          let createTablero = createGameElements(9);
           if (!startGame) {
             createTablero[randomToe(createTablero.length)] = "O";
           }

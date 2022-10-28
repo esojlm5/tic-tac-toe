@@ -1,34 +1,61 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## About The Project
+
+TicTacToe game
+
+
+### Built With
+
+This section should list any major frameworks/libraries use. Here are a few examples.
+
+* React
+* Nextjs
+* Mongodb
+* Typescript
+* uuid
+* mongoose
 
 ## Getting Started
 
-First, run the development server:
+This is an example of how you may give instructions on setting up your project locally.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+- The application is connected to a mongodb and the environments are on next.config.js you can change it to other mongodb, the connection is located 'db.Connect.ts' file
+- The view are located in path http://localhost:3000/tictac
+- The service are located in 'api/tic-tac-toe/play.ts'
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Logic to Create a Game
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- The game start automatically the backend service will create a game with 'partidaId' using uuid,the bot can start first or not, for now the bot is 'O' and user marktype is 'X', after the game started you can pick any '-' square and the validation will execute from backend service there we are saving the movements in a field 'historial' also we are saving 'estadoTablero' while we are playing,
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Logic to get a Winner
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+We have a function where validated the winner with possibles positions in tictactoe squares(utils/winnerValidator.ts) if we found a winner return a object 'validate' with two keys positions(positions winners) and markType(can be 'X' or 'O') if not or is a draw return the object 'validate' empty
 
-## Learn More
+## Reset Game
 
-To learn more about Next.js, take a look at the following resources:
+Here we can reset the game when you clicked 'jugar denuevo' we are passing the 'siguienteMoviento' with object {deshacer: true} and service will reset the game
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Get a Game
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+We can get a game to check your historial retrieving a fetch with {'partidaId': 'xxxxx'}
 
-## Deploy on Vercel
+## Methods API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+we have two methods for now 'GET' and 'POST' the endpoint is http://localhost:3000/api/tic-tac-toe/play
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- to create a game can send a fetch 'POST' methods with empty body {}
+- to get a game to check your historial retrieving a fetch 'GET' method with {'partidaId': 'xxxxx'}
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+
+* NodeJS latest versions
+* npm install -g
+* npm install -g yarn
+
+
+### Installation
+
+1. clone the project
+2. yarn install
+3. yarn dev

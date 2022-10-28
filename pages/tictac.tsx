@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import styles from "@/styles/TicTac.module.css";
 import { postGame } from "@/services/tictac";
+import { createGameElements } from "@/utils/winnerValidator";
 
 interface playInterface {
   partidaId: string;
@@ -9,6 +10,7 @@ interface playInterface {
   validate: {
     markType?: string;
   };
+  siguienteMovimiento: object | null;
 }
 
 const TicTac = () => {
@@ -18,6 +20,7 @@ const TicTac = () => {
     partidaId: "",
     estadoTablero: [],
     validate: {},
+    siguienteMovimiento: null,
   });
 
   const played = async (update: object) => {
@@ -30,6 +33,15 @@ const TicTac = () => {
     setMyTurn(true);
     played({ partidaId: "" });
   }, []);
+
+  const handleReset = () => {
+    const { partidaId, estadoTablero, validate } = move;
+    played({
+      partidaId,
+      estadoTablero,
+      siguienteMovimiento: { deshacer: true },
+    });
+  };
 
   const handleClick = (index: number, element: string) => {
     const { partidaId, estadoTablero, validate } = move;
@@ -50,6 +62,9 @@ const TicTac = () => {
 
   return (
     <div className={styles.tictac}>
+      <button className={styles.playAgain} onClick={handleReset}>
+        jugar denuevo
+      </button>
       <div className={styles.tictacContainer}>
         {move?.estadoTablero &&
           move.estadoTablero.map((element, index) => {

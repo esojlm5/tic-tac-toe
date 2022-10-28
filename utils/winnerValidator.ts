@@ -27,3 +27,6 @@ export const ticTacValidator = (tictac: string[]) => {
 
   return winner;
 };
+
+export const createGameElements = (length: number) =>
+  [...Array(length)].map(() => "-");
