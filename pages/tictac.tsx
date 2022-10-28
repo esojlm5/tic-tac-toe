@@ -1,32 +1,73 @@
 import React, { useEffect, useState } from "react";
 
 import styles from "@/styles/TicTac.module.css";
-import { postGame, hello } from "@/services/tictac";
+import { postGame } from "@/services/tictac";
+
+interface playInterface {
+  partidaId: string;
+  estadoTablero: Array<string>;
+  validate: {
+    markType?: string;
+  };
+}
 
 const TicTac = () => {
-  const [markType, setMarType] = useState("x");
+  const [markType, setMarkType] = useState("x");
+  const [myTurn, setMyTurn] = useState(false);
+  const [move, setMove] = useState<playInterface>({
+    partidaId: "",
+    estadoTablero: [],
+    validate: {},
+  });
+
+  const played = async (update: object) => {
+    const response = await postGame(update);
+    setMyTurn(false);
+    setMove({ ...move, ...response });
+  };
+
   useEffect(() => {
-    postGame({ partidaId: 123123 });
+    setMyTurn(true);
+    played({ partidaId: "" });
   }, []);
 
-  const handleClick = (index: number) => {
-    console.log(index, markType);
+  const handleClick = (index: number, element: string) => {
+    const { partidaId, estadoTablero, validate } = move;
+    if (element !== "-" || myTurn || validate?.markType) {
+      return null;
+    }
+    estadoTablero[index] = markType;
+    setMyTurn(true);
+    played({
+      partidaId,
+      estadoTablero,
+      siguienteMovimiento: {
+        caracter: markType,
+        posicion: index,
+      },
+    });
   };
 
   return (
     <div className={styles.tictac}>
       <div className={styles.tictacContainer}>
-        {[...Array(9)].map((_, index) => {
-          return (
-            <div
-              className={styles.tictacElement}
-              key={index}
-              onClick={() => handleClick(index)}
-            >
-              {index}
-            </div>
-          );
-        })}
+        {move?.estadoTablero &&
+          move.estadoTablero.map((element, index) => {
+            return (
+              <div
+                className={`${styles.tictacElement} ${
+                  move.validate?.positions &&
+                  move.validate?.positions.includes(index)
+                    ? styles.ticWinner
+                    : null
+                }`}
+                key={index}
+                onClick={() => handleClick(index, element)}
+              >
+                {element}
+              </div>
+            );
+          })}
       </div>
     </div>
   );

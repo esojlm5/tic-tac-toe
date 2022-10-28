@@ -6,13 +6,13 @@ const postGame = async (data = {}) => {
       "Content-Type": "application/json",
     },
   });
-  return response;
+  const result = await response.json();
+  return result;
 };
 
-const getGame = async (id = 1) => {
-  const response = await fetch(`${process.env.apiGame}`, {
+const getGame = async (id: string) => {
+  const response = await fetch(`${process.env.apiGame}?partidaId=${id}`, {
     method: "GET",
-    body: JSON.stringify(id),
     headers: {
       "Content-Type": "application/json",
     },
@@ -31,4 +31,4 @@ const hello = async () => {
 
   return response.json();
 };
-export { postGame, hello };
+export { postGame, hello, getGame };

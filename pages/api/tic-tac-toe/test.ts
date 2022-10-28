@@ -1,5 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
 import connectMongo from "@/lib/dbConnect";
 import PlayModel from "@/models/play.model";
 

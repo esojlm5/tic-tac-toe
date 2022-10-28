@@ -4,6 +4,8 @@ const nextConfig = {
   swcMinify: true,
   env: {
     apiGame: "/api/tic-tac-toe/play",
+    MONGODB_URI:
+      "mongodb+srv://workout:demo@atlascluster.xwtgigz.mongodb.net/test",
   },
 };
 

@@ -20,6 +20,7 @@
       "@/styles*": ["styles/*"],
       "@/services/*": ["services/*"],
       "@/lib/*": ["lib/*"],
+      "@/utils/*": ["utils/*"],
       "@/models/*": ["models/*"],
       "@/controllers/*": ["controllers/*"]
     }

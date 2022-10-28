@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { v4 as uuidv4 } from "uuid";
 
+import { ticTacValidator } from "@/utils/winnerValidator";
 import connectMongo from "@/lib/dbConnect";
 import PlayModel from "@/models/play.model";
 
@@ -7,26 +9,86 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const {
-    query: { id, name },
-    method,
-    body,
-  } = req;
+  const { method, body } = req;
   await connectMongo();
   switch (method) {
     case "GET":
       try {
-        const find = await PlayModel.find({ id: "123" }).exec();
-        res.status(200).json({ id: find });
+        const { partidaId } = body;
+        const find = await PlayModel.find({ partidaId }).exec();
+        res.status(200).json(!find.length ? { message: "id not found" } : find);
       } catch (err) {
         res.status(400).json({ message: err });
       }
       break;
     case "POST":
-      // const bodyParse = JSON.parse(body);
-      console.log(body?.partidaId);
-      const startGame = Math.round(Math.random());
-      res.status(200).json(startGame);
+      const randomToe = (length: number) => Math.floor(Math.random() * length);
+      try {
+        if (body?.partidaId) {
+          const { estadoTablero, siguienteMovimiento } = body;
+          const { caracter, posicion } = siguienteMovimiento;
+
+          const copyTable = [...estadoTablero];
+          let validate: any = ticTacValidator(copyTable);
+          if (!validate?.markType) {
+            estadoTablero[posicion] = caracter;
+            const toeFilter = estadoTablero.reduce(
+              (acc: any, current: string, index: number) => {
+                let result = acc?.free ?? [];
+                if (current === "-") {
+                  result = [...result, index];
+                }
+                return { ...acc, free: result };
+              },
+              {}
+            );
+            const { free } = toeFilter;
+            const random = randomToe(toeFilter.free.length);
+            estadoTablero[free[random]] = "O";
+          }
+          validate = ticTacValidator(estadoTablero);
+          const find = await PlayModel.findOneAndUpdate(
+            { partidaId: body.partidaId },
+            {
+              estadoTablero,
+              $push: { historial: siguienteMovimiento },
+            },
+            { returnOriginal: false }
+          );
+          res
+            .status(200)
+            .json({ ...find._doc, siguienteMovimiento: null, validate });
+          res.end();
+        } else {
+          const startGame = Math.round(Math.random());
+          let createTablero = [...Array(9)].map(() => "-");
+          if (!startGame) {
+            createTablero[randomToe(createTablero.length)] = "O";
+          }
+          const create = await PlayModel.create({
+            partidaId: uuidv4(),
+            estadoTablero: createTablero,
+            historial: [],
+          });
+          res.status(200).json(create);
+          res.end();
+        }
+      } catch (err) {
+        res.status(400).json({ message: err });
+      }
+      break;
+    case "PUT":
+      try {
+        const { estadoTablero } = body;
+        const update = await PlayModel.findOneAndUpdate(
+          { partidaId: body.partidaId },
+          estadoTablero
+        );
+        res.status(200).json(update);
+        res.end();
+      } catch (err) {
+        res.status(400).json({ message: err });
+      }
       break;
     default:
       res.setHeader("Allow", ["GET", "POST"]);
