@@ -7,5 +7,5 @@ export interface PlayInterface {
       }
     | true;
   siguienteMovimiento: object | null;
-  historial: Array<object>;
+  historial?: Array<object>;
 }
