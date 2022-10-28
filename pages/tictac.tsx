@@ -3,23 +3,15 @@ import React, { useEffect, useState } from "react";
 import styles from "@/styles/TicTac.module.css";
 import { postGame } from "@/services/tictac";
 import { createGameElements } from "@/utils/winnerValidator";
-
-interface playInterface {
-  partidaId: string;
-  estadoTablero: Array<string>;
-  validate: {
-    markType?: string;
-  };
-  siguienteMovimiento: object | null;
-}
+import { PlayInterface } from "@/interfaces/playInterface";
 
 const TicTac = () => {
   const [markType, setMarkType] = useState("x");
   const [myTurn, setMyTurn] = useState(false);
-  const [move, setMove] = useState<playInterface>({
+  const [move, setMove] = useState<PlayInterface>({
     partidaId: "",
     estadoTablero: [],
-    validate: {},
+    winner: {},
     siguienteMovimiento: null,
   });
 
@@ -35,7 +27,7 @@ const TicTac = () => {
   }, []);
 
   const handleReset = () => {
-    const { partidaId, estadoTablero, validate } = move;
+    const { partidaId, estadoTablero, winner } = move;
     played({
       partidaId,
       estadoTablero,
@@ -44,8 +36,8 @@ const TicTac = () => {
   };
 
   const handleClick = (index: number, element: string) => {
-    const { partidaId, estadoTablero, validate } = move;
-    if (element !== "-" || myTurn || validate?.markType) {
+    const { partidaId, estadoTablero, winner } = move;
+    if (element !== "-" || myTurn || winner?.markType) {
       return null;
     }
     estadoTablero[index] = markType;
@@ -71,8 +63,8 @@ const TicTac = () => {
             return (
               <div
                 className={`${styles.tictacElement} ${
-                  move.validate?.positions &&
-                  move.validate?.positions.includes(index)
+                  move.winner?.positions &&
+                  move.winner?.positions.includes(index)
                     ? styles.ticWinner
                     : null
                 }`}

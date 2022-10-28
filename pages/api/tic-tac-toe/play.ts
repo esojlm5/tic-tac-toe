@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ticTacValidator, createGameElements } from "@/utils/winnerValidator";
 import connectMongo from "@/lib/dbConnect";
 import PlayModel from "@/models/play.model";
+import { PlayInterface } from "@/interfaces/playInterface";
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,8 +30,8 @@ export default async function handler(
           const { caracter, posicion } = siguienteMovimiento;
 
           const copyTable = [...estadoTablero];
-          let validate: any = ticTacValidator(copyTable);
-          if (!validate?.markType) {
+          let winner: any = ticTacValidator(copyTable);
+          if (!winner?.markType) {
             estadoTablero[posicion] = caracter;
             const toeFilter = estadoTablero.reduce(
               (acc: any, current: string, index: number) => {
@@ -46,13 +47,15 @@ export default async function handler(
             const random = randomToe(toeFilter.free.length);
             estadoTablero[free[random]] = "O";
           }
-          validate = ticTacValidator(estadoTablero);
+          winner = ticTacValidator(estadoTablero);
           const find = await PlayModel.findOneAndUpdate(
             { partidaId: body.partidaId },
             {
               estadoTablero: siguienteMovimiento?.deshacer
                 ? createGameElements(9)
                 : estadoTablero,
+              winner: siguienteMovimiento?.deshacer || winner,
+              //should add condition to don't push if siguiente?.deshacer
               $push: {
                 historial: siguienteMovimiento?.deshacer
                   ? {}
@@ -64,7 +67,7 @@ export default async function handler(
           res.status(200).json({
             ...find._doc,
             siguienteMovimiento: null,
-            validate: siguienteMovimiento?.deshacer || validate,
+            winner: siguienteMovimiento?.deshacer ? {} : winner,
           });
           res.end();
         } else {
@@ -77,6 +80,7 @@ export default async function handler(
             partidaId: uuidv4(),
             estadoTablero: createTablero,
             historial: [],
+            winner: {},
           });
           res.status(200).json(create);
           res.end();

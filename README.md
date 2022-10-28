@@ -29,7 +29,7 @@ This is an example of how you may give instructions on setting up your project l
 ![create game](https://github.com/esojlm5/tic-tac-toe/blob/main/screens/create-game.png)
 ## Logic to get a Winner
 
-We have a function where validated the winner with possibles positions in tictactoe squares(utils/winnerValidator.ts) if we found a winner return a object 'validate' with two keys positions(positions winners) and markType(can be 'X' or 'O') if not or is a draw return the object 'validate' empty
+We have a function where validated the winner with possibles positions in tictactoe squares(utils/winnerValidator.ts) if we found a winner return a object 'winner' with two keys positions(positions winners) and markType(can be 'X' or 'O') if not or is a draw return the object 'winner' empty
 
 ![winner game](https://github.com/esojlm5/tic-tac-toe/blob/main/screens/winner-game.png)
 
