@@ -64,7 +64,7 @@ const TicTac = () => {
               <div
                 className={`${styles.tictacElement} ${
                   move.winner?.positions &&
-                  move.winner?.positions.includes(index)
+                  move.winner?.positions.includes(index as never)
                     ? styles.ticWinner
                     : null
                 }`}

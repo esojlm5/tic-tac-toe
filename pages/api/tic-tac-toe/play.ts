@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 import { ticTacValidator, createGameElements } from "@/utils/winnerValidator";
 import connectMongo from "@/lib/dbConnect";
 import PlayModel from "@/models/play.model";
-import { PlayInterface } from "@/interfaces/playInterface";
 
 export default async function handler(
   req: NextApiRequest,
