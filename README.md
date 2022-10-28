@@ -25,12 +25,13 @@ This is an example of how you may give instructions on setting up your project l
 ## Logic to Create a Game
 
 - The game start automatically the backend service will create a game with 'partidaId' using uuid,the bot can start first or not, for now the bot is 'O' and user marktype is 'X', after the game started you can pick any '-' square and the validation will execute from backend service there we are saving the movements in a field 'historial' also we are saving 'estadoTablero' while we are playing,
-<img alt="alt_text" src="screens/create-game.PNG" />
+
+![create game](https://github.com/esojlm5/tic-tac-toe/blob/main/screens/create-game.png)
 ## Logic to get a Winner
 
 We have a function where validated the winner with possibles positions in tictactoe squares(utils/winnerValidator.ts) if we found a winner return a object 'validate' with two keys positions(positions winners) and markType(can be 'X' or 'O') if not or is a draw return the object 'validate' empty
 
-<img alt="alt_text" src="screens/winner-game.PNG" />
+![winner game](https://github.com/esojlm5/tic-tac-toe/blob/main/screens/winner-game.png)
 
 ## Reset Game
 
