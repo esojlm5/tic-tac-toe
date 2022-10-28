@@ -47,7 +47,6 @@ export default async function handler(
             estadoTablero[free[random]] = "O";
           }
           validate = ticTacValidator(estadoTablero);
-          console.log(siguienteMovimiento?.deshacer);
           const find = await PlayModel.findOneAndUpdate(
             { partidaId: body.partidaId },
             {
@@ -83,7 +82,7 @@ export default async function handler(
           res.end();
         }
       } catch (err) {
-        res.status(400).json({ message: err });
+        res.status(400).json({ message: "Not valid payload format" });
       }
       break;
     case "PUT":
